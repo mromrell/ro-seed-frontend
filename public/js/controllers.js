@@ -5,6 +5,12 @@
 angular.module('roApp.controllers', [])
     .controller('BaseController', ['$scope', '$window', 'brand', 'SessionService', function($scope, $window, brand, SessionService) {
         $scope.brand = brand;
+        $scope.session = SessionService.getSession();
+//        console.log($scope.session);
+        $scope.$on('event:login-confirmed', function() {
+            console.log('event has been broadcast to Home Controller');
+            $scope.session = SessionService.getSession();
+        });
 
         $scope.doLogout = function() {
             SessionService.removeSession();
@@ -21,6 +27,16 @@ angular.module('roApp.controllers', [])
             $scope.session = SessionService.getSession();
         });
     }])
+    .controller('MyAccountProfileController', ['$scope', 'SessionService', 'Restangular', function($scope, SessionService, Restangular) {
+        $scope.session = SessionService.getSession();
+
+        $scope.$on('event:login-confirmed', function () {
+            console.log('event has been broadcast to Home Controller');
+            $scope.session = SessionService.getSession();
+
+        });
+        console.log($scope.session);
+    }])
     .controller('UserCreateController', ['$scope', '$window', 'Restangular', 'SessionService', function($scope, $window, Restangular, SessionService) {
         $scope.createUser = function(user) {
             console.log(JSON.stringify(user));
@@ -31,7 +47,7 @@ angular.module('roApp.controllers', [])
                 user.last_login = data.last_login;
                 user.stats = 'Active';
                 user.username = data.username;
-                console.log('Token: ' + JSON.stringify(data));
+//                console.log('Token: ' + JSON.stringify(data));
 
                 SessionService.saveSession(data.auth_token);
 

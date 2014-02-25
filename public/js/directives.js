@@ -20,10 +20,14 @@ angular.module('roApp.directives', [])
 //                    $http.post("http://cc-ro-seed-backend.herokuapp.com/api-token-auth/", user_data)
                     $http.post("http://localhost:8001/api-token-auth/", user_data)
                         .success(function (response) {
+                            console.log(JSON.stringify(response));
                             $http.defaults.headers.common['Authorization'] = 'Token ' + response.token;
-                            SessionService.saveSession(response.token);
+                            console.log(response.user[0]);
+                            SessionService.saveSession(response.user[0]);
+                            SessionService.saveToken(response.token);
+
                             $rootScope.$broadcast('event:login-confirmed');
-                            elem.slideUp();
+//                            elem.slideUp();
                         });
 
                 });
